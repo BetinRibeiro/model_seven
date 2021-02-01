@@ -53,3 +53,168 @@ CREATE TABLE "auth_cas"(
     "renew" CHAR(1)
 );
 success!
+timestamp: 2021-02-01T01:18:16.055926
+CREATE TABLE "empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "proprietario" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  NOT NULL DEFAULT 1 ,
+    "razaosocial" CHAR(512),
+    "nomefantasia" CHAR(512),
+    "cnpj" CHAR(512),
+    "inscricaoestarual" CHAR(512),
+    "inscricaomunicipal" CHAR(512),
+    "crt" CHAR(512),
+    "cep" CHAR(512),
+    "lougradouro" CHAR(512),
+    "numero" CHAR(512),
+    "bairro" CHAR(512),
+    "uf" CHAR(512),
+    "cidade" CHAR(512),
+    "complemento" CHAR(512),
+    "email" CHAR(512),
+    "telefone" CHAR(512),
+    "celular" CHAR(512),
+    "limite_clientes" INTEGER,
+    "limite_logins" INTEGER,
+    "limite_produtos" INTEGER,
+    "limite_fornecedores" INTEGER,
+    "limite_vendas" INTEGER,
+    "data_bloqueio" DATE NOT NULL DEFAULT '2021-02-01',
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T01:18:20.871150
+CREATE TABLE "usuario_empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "usuario" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "nome" CHAR(512),
+    "tipo" CHAR(512),
+    "comissao" DOUBLE NOT NULL DEFAULT 10.0,
+    "ativo" CHAR(1)
+);
+success!
+timestamp: 2021-02-01T01:18:22.285477
+CREATE TABLE "pessoa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "representante" INTEGER REFERENCES "usuario_empresa" ("id") ON DELETE CASCADE  ,
+    "tipo" CHAR(512),
+    "razaosocial_nome" CHAR(512) NOT NULL,
+    "sexo" CHAR(512) NOT NULL DEFAULT 'M',
+    "estado_civil" CHAR(512) NOT NULL DEFAULT 'Solteiro(a)',
+    "apelido_nome_fantasia" CHAR(512),
+    "cpf" CHAR(512) NOT NULL,
+    "org_espedidor_cpf" CHAR(512) NOT NULL DEFAULT 'SSP',
+    "rg" CHAR(512) NOT NULL,
+    "org_espedidor_rg" CHAR(512) NOT NULL DEFAULT 'SSP',
+    "cep" CHAR(512),
+    "lougradouro" CHAR(512),
+    "numero" CHAR(512),
+    "bairro" CHAR(512),
+    "uf" CHAR(512),
+    "cidade" CHAR(512),
+    "complemento" CHAR(512),
+    "email" CHAR(512),
+    "telefone" CHAR(512),
+    "celular" CHAR(512) NOT NULL DEFAULT '(88)98888-8888',
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T01:18:26.159415
+CREATE TABLE "fornecedor"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "nome" CHAR(512),
+    "descricao" CHAR(512),
+    "total_compra" DOUBLE NOT NULL DEFAULT 0.0,
+    "total_pago" DOUBLE NOT NULL DEFAULT 0.0,
+    "total_devolvido" DOUBLE NOT NULL DEFAULT 0.0,
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T01:18:27.777206
+CREATE TABLE "produto"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "fornecedor" INTEGER REFERENCES "fornecedor" ("id") ON DELETE CASCADE  ,
+    "descricao" CHAR(512),
+    "quant_estoque" INTEGER,
+    "custo_unitario" DOUBLE NOT NULL DEFAULT 0.0,
+    "preco_unitario" DOUBLE NOT NULL DEFAULT 0.0,
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T01:37:16.794530
+CREATE TABLE "venda"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "cliente" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "representante" INTEGER REFERENCES "usuario_empresa" ("id") ON DELETE CASCADE  ,
+    "codigo" CHAR(512),
+    "data_venda" DATE NOT NULL DEFAULT '2021-02-01',
+    "status" CHAR(512),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T01:37:18.291731
+CREATE TABLE "item_venda"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "cliente" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "fornecedor" INTEGER REFERENCES "fornecedor" ("id") ON DELETE CASCADE  ,
+    "produto" INTEGER REFERENCES "produto" ("id") ON DELETE CASCADE  ,
+    "venda" INTEGER REFERENCES "venda" ("id") ON DELETE CASCADE  ,
+    "representante" INTEGER REFERENCES "usuario_empresa" ("id") ON DELETE CASCADE  ,
+    "codigo" CHAR(512),
+    "data_venda" DATE NOT NULL DEFAULT '2021-02-01',
+    "quantidade" INTEGER,
+    "custo_unitario" DOUBLE NOT NULL DEFAULT 0.0,
+    "preco_unitario" DOUBLE NOT NULL DEFAULT 0.0,
+    "custo_total" CHAR(512),
+    "preco_total" CHAR(512),
+    "comissao" DOUBLE NOT NULL DEFAULT 0.0,
+    "status" CHAR(512),
+    "conferida" CHAR(1),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-01T03:10:02.671350
+ALTER TABLE "fornecedor" ADD "celular" CHAR(512);
+timestamp: 2021-02-01T03:10:02.735540
+ALTER TABLE "fornecedor" ADD "telefone" CHAR(512);
+success!
+timestamp: 2021-02-01T04:00:00.838286
+ALTER TABLE "venda" ADD "preco_total" DOUBLE NOT NULL DEFAULT 0.0;
+timestamp: 2021-02-01T04:00:05.686075
+ALTER TABLE "venda" ADD "custo_total" DOUBLE NOT NULL DEFAULT 0.0;
+success!

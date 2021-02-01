@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+db.define_table('venda',
+                Field('empresa','reference empresa', writable=False, readable=False, label='Empresa'),
+                Field('cliente','reference pessoa', writable=False, readable=False, label='Cliente'),
+                Field('representante','reference usuario_empresa', writable=True, readable=True, label='Representante'),
+                #
+                Field('codigo', 'string', label='Codigo', writable=False, readable=False,requires = IS_UPPER()),
+                Field('data_venda', 'date', label="Data Venda", writable=False, readable=False, default=request.now, requires = IS_DATE(format=('%d-%m-%Y')), notnull=True),
+                Field('custo_total', 'double', label='Custo Unitario', writable=False, readable=False, notnull=True, default=0),
+                Field('preco_total', 'double', label='Preço Unitario', writable=False, readable=False, notnull=True, default=0),
+                Field('status', 'string', default='Aberto', writable=True, readable=True, label='Status'),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(codigo)s')
+
+db.define_table('item_venda',
+                Field('empresa','reference empresa', writable=False, readable=False, label='Empresa'),
+                Field('cliente','reference pessoa', writable=False, readable=False, label='Cliente'),
+                Field('fornecedor','reference fornecedor', writable=False, readable=False, label='Fornecedor'),
+                Field('produto','reference produto', writable=False, readable=False, label='Produto'),
+                Field('venda','reference venda', writable=False, readable=False, label='Venda'),
+                Field('representante','reference usuario_empresa', writable=False, readable=False, label='Representante'),
+                #
+                Field('codigo', 'string', label='Codigo', writable=False, readable=False,requires = IS_UPPER()),
+                Field('data_venda', 'date', label="Data Venda", writable=False, readable=False, default=request.now, requires = IS_DATE(format=('%d-%m-%Y')), notnull=True),
+                Field('quantidade', 'integer', label='Quantidade', writable=True, readable=True, default=10),
+                Field('custo_unitario', 'double', label='Custo Unitario', writable=False, readable=False, notnull=True, default=0),
+                Field('preco_unitario', 'double', label='Preço Unitario', writable=False, readable=False, notnull=True, default=0),
+                Field('custo_total',
+                          compute=lambda r: r['custo_unitario'] * r['quantidade']),
+                Field('preco_total',
+                          compute=lambda r: r['preco_unitario'] * r['quantidade']),
+                Field('comissao', 'double', label='Comissao', writable=False, readable=False, notnull=True, default=0),
+                Field('status', 'string', default='Aberto', writable=False, readable=False, label='Status'),
+                Field('conferida', 'boolean', writable=False, readable=False, default=False),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(codigo)s')

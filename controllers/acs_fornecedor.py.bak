@@ -1,12 +1,76 @@
 # -*- coding: utf-8 -*-
 @auth.requires_login()
-def index(): return locals()
+def index():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    if usuario.tipo=="Representante":
+        redirect(URL('default','index'))
+    empresa = db.empresa(usuario.empresa)
+    paginacao = 35
+    if len(request.args) == 0:
+        pagina = 1
+    else:
+        try:
+            pagina = int(request.args[0])
+        except ValueError:
+            redirect(URL('erro', vars={
+                  'msg':'Numero da página inválido'
+                  }))
+    if pagina <= 0:
+        redirect(URL(args=1))
+    total = db(db.fornecedor.empresa==empresa.id).count()
+    paginas = total/paginacao
+    if total%paginacao:
+        paginas+=1
+    if total==0:
+        paginas=1
+    if pagina > paginas:
+        redirect(URL(args=[paginas]))
+    limites = (paginacao*(pagina-1), (paginacao*pagina))
+    registros = db(db.fornecedor.empresa==empresa.id).select(
+      limitby=limites,orderby=~db.fornecedor.id)
+    consul=(request.args(1))
+    if (consul):
+        registros = db((db.fornecedor.empresa==empresa.id)&((db.fornecedor.nome.contains(consul))|(db.fornecedor.descricao.contains(consul)))).select(limitby=(0,paginacao))
+    return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, usuario=usuario, consul=consul)
+
 @auth.requires_login()
-def cadastrar(): return locals()
+def cadastrar():
+    response.view = 'generic.html' # use a generic view
+    request.function='Cadastrar novo Fornecedor'
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    db.fornecedor.empresa.default=usuario.empresa
+    db.fornecedor.empresa.writable=False
+    db.fornecedor.empresa.readable=False
+    form = SQLFORM(db.fornecedor).process()
+    if form.accepted:
+        response.flash = 'Formulario aceito'
+        redirect(URL('index'))
+    elif form.errors:
+        response.flash = 'Formulario não aceito'
+    else:
+        response.flash = 'Preencha o formulario'
+    return  dict(form=form)
+
 @auth.requires_login()
-def alterar(): return locals()
+def alterar():
+    response.view = 'generic.html' # use a generic view
+    fornecedor = db.fornecedor(request.args(0, cast=int))
+    db.fornecedor.id.writable=False
+    db.fornecedor.id.readable=False
+    form = SQLFORM(db.fornecedor, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Projeto atualizado'
+        redirect(URL('index'))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+
 
 @auth.requires_login()
 def lista_produto(): return locals()
 @auth.requires_login()
+def alterar_produto(): return locals()
+@auth.requires_login()
 def lista_itens_venda(): return locals()
+@auth.requires_login()
+def alterar_itens_venda(): return locals()

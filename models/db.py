@@ -132,24 +132,92 @@ if configuration.get('scheduler.enabled'):
     from gluon.scheduler import Scheduler
     scheduler = Scheduler(db, heartbeat=configuration.get('scheduler.heartbeat'))
 
-# -------------------------------------------------------------------------
-# Define your tables below (or better in another model file) for example
-#
-# >>> db.define_table('mytable', Field('myfield', 'string'))
-#
-# Fields can be 'string','text','password','integer','double','boolean'
-#       'date','time','datetime','blob','upload', 'reference TABLENAME'
-# There is an implicit 'id integer autoincrement' field
-# Consult manual for more options, validators, etc.
-#
-# More API examples for controllers:
-#
-# >>> db.mytable.insert(myfield='value')
-# >>> rows = db(db.mytable.myfield == 'value').select(db.mytable.ALL)
-# >>> for row in rows: print row.id, row.myfield
-# -------------------------------------------------------------------------
+db.define_table('empresa',
+                Field('proprietario','reference auth_user', label='Proprietario', writable=False, readable=False, notnull=True, default=1),
+                Field('razaosocial', 'string', label='Razão Social',requires = IS_UPPER()),
+                Field('nomefantasia', 'string', label='Nome Fantasia',requires = IS_UPPER()),
+                Field('cnpj', 'string', label='CNPJ',default="00.000.000/0001-00",requires = IS_UPPER()),
+                Field('inscricaoestarual', 'string',default="00000", label='Insc. Est',requires = IS_UPPER()),
+                Field('inscricaomunicipal', 'string',default="00000", label='Insc. Mun',requires = IS_UPPER()),
+                Field('crt', 'string', label='CRT',default="00000",requires = IS_UPPER()),
+                #endereco
+                Field('cep', 'string', label='CEP',default="60000-000",requires = IS_UPPER()),
+                Field('lougradouro', 'string', label='Lougradouro',default="Rua",requires = IS_UPPER()),
+                Field('numero', 'string', label='Numero',default="0",requires = IS_UPPER()),
+                Field('bairro', 'string', label='Bairro',default="Centro",requires = IS_UPPER()),
+                Field('uf', 'string', label='UF',default="CE",requires = IS_UPPER()),
+                Field('cidade', 'string', label='Cidade', default='Juazeiro do Norte',requires = IS_UPPER()),
+                Field('complemento', 'string', label='Complemento',default="Sem Complemento",requires = IS_UPPER()),
+                #contato
+                Field('email', 'string', label='Email',default="sem@email.com",requires = IS_UPPER()),
+                Field('telefone', 'string', label='Telefone',default="(88)3500-0000",requires = IS_UPPER()),
+                Field('celular', 'string', label='Celular',default="(88)99000-0000",requires = IS_UPPER()),
+                #quantidade dependendo do pacote que contrate
+                Field('limite_clientes', 'integer', label='L Clientes', writable=False, readable=False, default=1000),
+                Field('limite_logins', 'integer', label='L Logins', writable=False, readable=False, default=4),
+                Field('limite_produtos', 'integer', label='L Produtos', writable=False, readable=False, default=200),
+                Field('limite_fornecedores', 'integer', label='L Fornecedores', writable=False, readable=False, default=200),
+                Field('limite_vendas', 'integer', label='L Vendas', writable=False, readable=False, default=2000),
+                Field('data_bloqueio', 'date', label="Data Bloqueio", writable=False, readable=False, default=request.now, requires = IS_DATE(format=('%d-%m-%Y')), notnull=True),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(nomefantasia)s')
 
-# -------------------------------------------------------------------------
-# after defining tables, uncomment below to enable auditing
-# -------------------------------------------------------------------------
-# auth.enable_record_versioning(db)
+db.define_table('usuario_empresa',
+                Field('usuario','reference auth_user', writable=False, readable=False, label='Usuario'),
+                Field('empresa','reference empresa', writable=False, readable=False, label='empresa'),
+                Field('nome', 'string', label='Nome',requires = IS_UPPER()),
+                Field('tipo', 'string', label='tipo',default='Representante'),
+                Field('comissao', 'double', label='%Comissão', writable=True, readable=True, notnull=True, default=10),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                format='%(nome)s')
+
+db.define_table('pessoa',
+                Field('empresa','reference empresa', label='empresa', writable=False, readable=False),
+                Field('representante','reference usuario_empresa', writable=True, readable=True, label='Representante'),
+                Field('tipo', 'string', label='Tipo', writable=False, readable=False, default='Física',requires = IS_UPPER()),
+                Field('razaosocial_nome', 'string', label='RS/NC',notnull=True ,requires=[IS_UPPER(),IS_LENGTH(minsize=12, error_message='Nome muito pequeno')]),
+                Field('sexo', 'string', label='Sexo', default='M',notnull=True, writable=False, readable=False ,requires = IS_UPPER()),
+                Field('estado_civil', 'string', label='Est. Civil',notnull=True , writable=False, readable=False, default='Solteiro(a)',requires = IS_UPPER()),
+                Field('apelido_nome_fantasia', 'string', label='AP/NF', writable=False, readable=False,requires = IS_UPPER()),
+                Field('cpf', 'string', label='CPF/CNPJ',notnull=True ,requires = IS_UPPER()),
+                Field('org_espedidor_cpf', 'string', default='SSP', writable=False, readable=False,notnull=True , label='org esp.',requires = IS_UPPER()),
+                Field('rg', 'string', label='RG',notnull=True ,requires = IS_UPPER()),
+                Field('org_espedidor_rg', 'string', default='SSP', writable=False, readable=False,notnull=True , label='org esp.',requires = IS_UPPER()),
+                Field('cep', 'string', label='CEP', default='63050-000',requires = IS_UPPER()),
+                Field('lougradouro', 'string', label='Lougradouro',requires = IS_UPPER()),
+                Field('numero', 'string', label='Numero',requires = IS_UPPER()),
+                Field('bairro', 'string', default='Centro', label='Bairro',requires = IS_UPPER()),
+                Field('uf', 'string', label='UF', default='CE',requires = IS_UPPER()),
+                Field('cidade', 'string', label='Cidade', default='Juazeiro do Norte',requires = IS_UPPER()),
+                Field('complemento', 'string', label='Complemento',requires = IS_UPPER()),
+                Field('email', 'string', label='Email', default='sem@email.com',requires = IS_EMAIL(error_message='Email Invalido!')),
+                Field('telefone', 'string', label='Telefone', default='(88)3555-5555',requires = IS_UPPER()),
+                Field('celular', 'string',notnull=True , default='(88)98888-8888', label='Celular',requires = IS_UPPER()),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(razaosocial_nome)s')
+
+db.define_table('fornecedor',
+                Field('empresa','reference empresa', writable=False, readable=False, label='empresa'),
+                Field('nome', 'string', label='Nome',requires = IS_UPPER()),
+                Field('descricao', 'string', label='Descrição',requires = IS_UPPER()),
+                Field('telefone', 'string', label='Telefone',default="(88)3500-0000",requires = IS_UPPER()),
+                Field('celular', 'string', label='Celular',default="(88)99000-0000",requires = IS_UPPER()),
+                Field('total_compra', 'double', label='Total Compras', writable=False, readable=False, notnull=True, default=0),
+                Field('total_pago', 'double', label='Total Pago', writable=False, readable=False, notnull=True, default=0),
+                Field('total_devolvido', 'double', label='Total Devolvido', writable=False, readable=False, notnull=True, default=0),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(nome)s')
+
+db.define_table('produto',
+                Field('empresa','reference empresa', writable=False, readable=False, label='Empresa'),
+                Field('fornecedor','reference fornecedor', writable=True, readable=True, label='Fornecedor'),
+                Field('descricao', 'string', label='Descrição',requires = IS_UPPER()),
+                Field('quant_estoque', 'integer', label='Q Estoque', writable=False, readable=False, default=0),
+                Field('custo_unitario', 'double', label='Custo Unitario', writable=True, readable=True, notnull=True, default=0),
+                Field('preco_unitario', 'double', label='Preço Unitario', writable=True, readable=True, notnull=True, default=0),
+                Field('ativo', 'boolean', writable=False, readable=False, default=True),
+                auth.signature,
+                format='%(descricao)s')
