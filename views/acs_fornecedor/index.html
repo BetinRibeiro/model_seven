@@ -49,6 +49,7 @@
                   <th scope="col">Telefone</th>
                   <th scope="col">Celular</th>
                   <th scope="col" class="text-center">Acessar</th>
+                  <th scope="col" class="text-center">Pedidos</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,7 +73,8 @@
                           {{=row.celular}}
                       </a>
                     </td>
-                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[1,row.id])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
+                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[row.id,1])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
+                    <td><a class="btn btn-secondary btn-block" href="{{=URL('acs_item_venda','lista_pedidos',args=[row.id,1])}}">Pedidos<i class="fa fa-fw fa-sign-in"></i></a></td>
                 </tr>
                   {{pass}}
               </tbody>

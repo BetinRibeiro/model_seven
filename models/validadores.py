@@ -23,4 +23,7 @@ db.usuario_empresa.tipo.requires = IS_IN_SET(['Representante','Administrador','P
 db.fornecedor.celular.requires = IS_MATCH('^\(?\d{2}\)?\d{5}\-?\d{4}$', error_message='Formato (00)00000-0000'),
 db.fornecedor.telefone.requires = IS_MATCH('^\(?\d{2}\)?\d{4}\-?\d{4}$', error_message='Formato (00)0000-0000'),
 #validador da venda
-#db.venda.status.requires = IS_IN_SET(['Aberto','Fechado','Conferido','Entregue','Devolvido','Quitado'])
+db.venda.status.requires = IS_IN_SET(['Aberto','Fechado','Conferido','Entregue','Devolvido','Quitado'])
+
+#registro de cheques dos clientes
+db.registro_cliente.tipo.requires = IS_IN_SET(['Pagamento','Cheque Voltou'])

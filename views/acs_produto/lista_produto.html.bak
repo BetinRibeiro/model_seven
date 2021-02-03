@@ -1,5 +1,12 @@
 {{extend 'layout.html'}}
-
+{{from random import randrange, uniform}}
+{{a=pagina}}
+{{if False:}}
+{{while a!=10:}}
+{{db.produto.insert(descricao="Tênis - "+str(randrange(1000, 9999))+" - Amarelo", fornecedor=fornecedor.id, preco_unitario=randrange(45, 85), custo_unitario=randrange(10, 35))}}
+{{a+=1}}
+{{pass}}
+{{pass}}
 
 <div class="py-5 text-center" >
     <div class="container">
@@ -62,6 +69,9 @@
               </thead>
               <tbody>
                   {{for row in rows:}}
+                  {{row.empresa=fornecedor.empresa}}
+                  {{row.update_record()}}
+                  
                 <tr>
                   <th scope="row">{{=row.descricao}}</th>
                   <td>R$ {{="{:,}".format(round(row.custo_unitario,1)).replace(",",".")}}0</td>
@@ -119,13 +129,13 @@
 
     btnElement.onclick = function(){
      var busca= inputElement.value;
-        window.location.href = "{{=URL('lista_produto')}}/"+fornecedor.id+"/1/"+busca
+        window.location.href = "{{=URL('lista_produto')}}/"+{{=fornecedor.id}}+"/1/"+busca
 
     }
     $(document).keypress(function(e) {
     if(e.which == 13) {
      var busca= inputElement.value;
-        window.location.href = "{{=URL('lista_produto')}}/"+fornecedor.id+"/1/"+busca
+        window.location.href = "{{=URL('lista_produto')}}/"+{{=fornecedor.id}}+"/1/"+busca
     }
 });
 </script>

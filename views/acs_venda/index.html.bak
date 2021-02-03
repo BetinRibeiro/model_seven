@@ -1,10 +1,54 @@
 {{extend 'layout.html'}}
+
+{{import datetime}}
+{{mes_atual=primeira_data.month}}
+{{ano_atual=primeira_data.year}}
+{{mes="Janeiro"}}
+{{if primeira_data.month==2:}}
+{{mes="Fevereiro"}}
+
+{{elif primeira_data.month==3:}}
+{{mes="Março"}}
+
+{{elif primeira_data.month==4:}}
+{{mes="Abril"}}
+
+{{elif primeira_data.month==5:}}
+{{mes="Maio"}}
+
+{{elif primeira_data.month==6:}}
+{{mes="Junho"}}
+
+{{elif primeira_data.month==7:}}
+{{mes="Julho"}}
+
+{{elif primeira_data.month==8:}}
+{{mes="Agosto"}}
+
+{{elif primeira_data.month==9:}}
+{{mes="Setembro"}}
+
+{{elif primeira_data.month==10:}}
+{{mes="Outubro"}}
+
+{{elif primeira_data.month==11:}}
+{{mes="Novembro"}}
+
+{{elif primeira_data.month==12:}}
+{{mes="Dezembro"}}
+{{pass}}
+{{if primeira_data.month==1:}}
+    {{primeira_data=datetime.date(primeira_data.year-1, 12, 1)}}
+{{else:}}
+    {{primeira_data=datetime.date(primeira_data.year,  primeira_data.month-1, 1)}}
+{{pass}}
+
 <div class="py-5 text-center" >
     <div class="container">
       <div class="row">
         <div class="mx-auto col-md-8">
-          <h2 class="mb-3">Lista de Venda</h2>
-          <p class="lead">Nome Cliente</p>
+          <h2 class="mb-3">Lista de Vendas</h2>
+          <p class="lead">nome empresa</p>
         </div>
       </div>
     </div>
@@ -15,34 +59,35 @@
         <div class="col-md-6">
           <div class="row">
             <div class="col-md-4 my-1">
-                <a class="btn btn-primary btn-block" href="{{=URL('acs_cliente','index')}}">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_empresa','index')}}">
                     <i class="fa fa-fw fa-arrow-left"></i>
-                    Opções
-                </a>
-            </div>
-            <div class="col-md-4 my-1">
-                <a class="btn btn-primary btn-block" href="{{=URL('acs_cliente','alterar')}}">
-                    <i class="fa fa-fw fa-pencil"></i>
-                    Cadastrar
+                    Voltar
                 </a>
             </div>
                <div class="col-md-4 my-1">
-                <a class="btn btn-primary btn-block" href="{{=URL('acs_venda','cadastrar')}}">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_cliente','index')}}">
                     <i class="fa fa-fw fa-plus"></i>
-                    Nova Venda
+                    Inserir Venda
                 </a>
             </div>
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group row my-1">
-                  <input type="text" class="form-control col-10 col-form-label" name="busca" placeholder="Pesquisa Nome" id="input"/>
-                <div class="col-2">
-                      <button class="btn btn-primary disabled" id="bt" type="button">
-                          <i class="fa fa-search"></i>
-                      </button>
+         <div class="row">
+                <div class="col-md-4 my-1">
+                    <a class="btn btn-secondary btn-block" href="{{=URL(args=[primeira_data.month,primeira_data.year])}}">
+                        <i class="fa fa-fw fa-chevron-left"></i>&nbsp;Anterior 
+                    </a>
                 </div>
-                    </div>
+                <div class="col-md-4 my-1">
+                    <h5 class="">{{=mes}} {{=ano}}</h5>
+                </div>
+                <div class="col-md-4 my-1">
+                    <a class="btn btn-secondary btn-block" href="{{=URL(args=[ultima_data.month,ultima_data.year])}}">&nbsp;Próximo 
+                        <i class="fa fa-fw fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
       </div>
       <div class="row">
@@ -53,20 +98,36 @@
                 <tr>
                   <th scope="col">Data</th>
                   <th scope="col">Representante</th>
+                  <th scope="col">Cliente</th>
                   <th scope="col">Valor</th>
                   <th scope="col">Status</th>
-                  <th scope="col" class="text-center">Acessar</th>
+                  <th scope="col">Acessar</th>
                 </tr>
               </thead>
               <tbody>
                   {{for row in rows:}}
-                <tr>
-                  <th scope="row">#</th>
-                  <td>#</td>
-                  <td>#</td>
-                  <td>#</td>
-                  <td><a class="btn btn-primary btn-block" href="{{=URL('default','index',args=row.id)}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
+                  {{if row.status=="Aberto":}}
+                <tr style="background-color:#f9f5c0">
+                  {{elif row.status=="Entregue":}}
+                <tr style="background-color:#c0f9d8">
+                  {{elif row.status=="Devolvido":}}
+                <tr style="background-color:#f9c0c4">
+                  {{else:}}
+                <tr style="background-color:#c0e1f9">
+                    {{pass}}
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
+                  <th scope="row">{{=row.representante.nome}}</th>
+                  <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
+                  <td>R$ {{="{:,}".format(round(row.preco_total,1)).replace(",",".")}}0</td>
+                    <td>{{=row.status}}</td>
+                    <td><a class="btn btn-primary btn-block" href="{{=URL('acs_item_venda','lista_status',args=row.id)}}">
+                    <i class="fa fa-fw fa-folder"></i>
+                    Acessar
+                </a></td>
                 </tr>
+                  {{row.comissao_total=10}}
+                  {{row.conferida=False}}
+                  {{row.update_record()}}
                   {{pass}}
               </tbody>
             </table>
@@ -75,51 +136,10 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <p class="">Cliente possui {{=total}} Clientes Cadastrados&nbsp;</p>
+          <p class="">Total {{=total}} em vendas / {{=mes}} de {{=ano}}</p>
         </div>
         <div class="col-md-6">
-          <div class="row">
-          <div class="col-md-12">
-            <nav aria-label="Navegação de página exemplo">
-  <ul class="pagination justify-content-end">
-        {{ if pagina != 1: }}
-        <li class="page-item">
-            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
-                <i class="fa fa-fw fa-arrow-left"></i>
-                Anterior&nbsp;</a>
-        </li>
-        {{ pass }}
-
-        {{ if pagina != paginas: }}
-        <li class="page-item">
-             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
-                Próximo&nbsp;
-                <i class="fa fa-fw fa-arrow-right"></i>
-            </a>
-        </li>
-        {{ pass }}
-    </ul>
-</nav>
-</div>
-</div>
         </div>
       </div>
     </div>
   </div>
-
-<script>
-    var inputElement = document.querySelector('input[name=busca]');
-    var btnElement = document.querySelector('button.botao');
-
-    btnElement.onclick = function(){
-     var busca= inputElement.value;
-        window.location.href = "{{=URL('index')}}"+"/1/"+busca
-
-    }
-    $(document).keypress(function(e) {
-    if(e.which == 13) {
-     var busca= inputElement.value;
-        window.location.href = "{{=URL('index')}}"+"/1/"+busca
-    }
-});
-</script>

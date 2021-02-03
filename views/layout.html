@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+
   <head>
     <meta charset="utf-8">
+      <meta http-equiv="Content-Language" content="pt-br">
     <!-- www.phpied.com/conditional-comments-block-downloads/ -->
     <!-- Always force latest IE rendering engine
          (even in intranet) & Chrome Frame
@@ -28,6 +30,9 @@
     <!-- All JavaScript at the bottom, except for Modernizr which enables
          HTML5 elements & feature detects -->
     <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+      <!-- importando temas para testar -->
+      <!-- cerulean cosmo cyborg darkly flatly journal litera lumen materia lux minty pulse sandstone simplex sketchy slate solar spacelab superhero  united yeti -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/litera/bootstrap.css"/>
     <!-- Favicons -->
     {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
     {{block head}}{{end}}
@@ -35,8 +40,8 @@
   <body>
     <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
     <!-- Navbar ======================================= -->
-    <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
-       <a href="http://web2py.com" class="navbar-brand d-flex w-50 mr-auto">web2py</a>
+    <nav class="navbar navbar-light navbar-expand-md bg-secondary justify-content-center ">
+       <a href="#" class="navbar-brand d-flex w-50 mr-auto">Model Seven</a>
        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
        </button>
@@ -59,9 +64,7 @@
           {{pass}}
           {{pass}}
         </ul>
-         <form class="form-inline my-2 my-lg-0">
-             <input class="form-control mr-sm-2" type="text" placeholder="Search">
-         </form>
+         
         {{if 'auth' in globals():}}
         <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
           <li class="nav-item dropdown">
@@ -96,7 +99,7 @@
     {{end}}
     <!-- Main ========================================= -->
     <!-- Begin page content -->
-    <div class="container-fluid main-container">
+    <div class="container-fluid main-container mb-5 pb-5">
       {{include}}
       {{=response.toolbar() if response.show_toolbar else ''}}
     </div>
@@ -107,8 +110,7 @@
         <div class="col-md-12">
           <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
           <div id="poweredBy" class="pull-right">
-            {{=T('Powered by')}}
-            <a href="http://www.web2py.com/">web2py</a>
+            Arsenal System - (88)98112-6816
           </div>
         </div>
       </div>

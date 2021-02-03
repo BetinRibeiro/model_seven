@@ -33,6 +33,7 @@ def index():
     if (consul):
         registros = db((db.produto.empresa==empresa.id)&((db.produto.descricao.contains(consul)))).select(limitby=(0,paginacao))
     return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, usuario=usuario)
+#função acessada pelo fornecedor
 @auth.requires_login()
 def lista_produto():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
@@ -40,7 +41,7 @@ def lista_produto():
         redirect(URL('default','index'))
     empresa = db.empresa(usuario.empresa)
     fornecedor = db.fornecedor(request.args(0, cast=int))
-    paginacao = 15
+    paginacao = 105
     if len(request.args) <= 1:
         redirect(URL(args=[fornecedor.id,1]))
     else:

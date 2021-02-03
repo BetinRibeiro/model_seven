@@ -1,0 +1,146 @@
+{{extend 'layout.html'}}
+<div class="py-5 text-center" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h2 class="mb-3">Lista de Produtos do Pedido</h2>
+          <p class="lead">{{=venda.cliente.razaosocial_nome}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+               <div class="col-md-4 my-1">
+                <a class="btn btn-secondary btn-block" href="{{=URL('acs_venda','index')}}">
+                    <i class="fa fa-fw fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </div>
+              {{if venda.status=="Aberto":}}
+               <div class="col-md-4 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Fechado'])}}">
+                    <i class="fa fa-fw fa-archive"></i>
+                    Fechar
+                </a>
+            </div>
+              {{elif venda.status=="Fechado":}}
+            <div class="col-md-4 my-1">
+                <a class="btn btn-warning btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Aberto'])}}">
+                    <i class="fa fa-fw fa-envelope-open-o"></i>
+                    Abrir
+                </a>
+            </div>
+              <div class="col-md-4 my-1">
+                <a class="btn btn-success btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Entregue'])}}">
+                    <i class="fa fa-fw fa-thumbs-o-up"></i>
+                    Entregar
+                </a>
+            </div>
+              {{elif venda.status=="Entregue":}}
+              <div class="col-md-4 my-1">
+                <a class="btn btn-warning btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Aberto'])}}">
+                    <i class="fa fa-fw fa-envelope-open-o"></i>
+                    Abrir
+                </a>
+            </div>
+               <div class="col-md-4 my-1">
+                <a class="btn btn-danger btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Devolvido'])}}">
+                    <i class="fa fa-fw fa-thumbs-o-down"></i>
+                    Devolver
+                </a>
+            </div>
+              {{elif venda.status=="Devolvido":}}
+              <div class="col-md-4 my-1">
+                <a class="btn btn-success btn-block" href="{{=URL('acs_venda','atualiza_status',args=[venda.id,'Entregue'])}}">
+                    <i class="fa fa-fw fa-thumbs-o-up"></i>
+                    Entregar
+                </a>
+            </div>
+            {{pass}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h5>
+              O pedido de <b>R$ {{="{:,}".format(round(venda.preco_total,1)).replace(",",".")}}0</b> está - {{=venda.status}}
+            </h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Fornecedor</th>
+                  <th scope="col">Produto</th>
+                  <th scope="col">Quant</th>
+                  <th scope="col">Preço</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{totalgeral=0}}
+                  {{custogeral=0}}
+                  {{for row in rows:}}
+                <tr>
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
+                  <th scope="row">{{=row.fornecedor.nome}}</th>
+                  <th scope="row">{{=row.produto.descricao}}</th>
+                  <th scope="row">{{=row.quantidade}}</th>
+                  <td>R$ {{="{:,}".format(round(row.preco_unitario,1)).replace(",",".")}}0</td>
+                  <td>R$ {{="{:,}".format(round(row.preco_unitario*row.quantidade,1)).replace(",",".")}}0</td>
+                  <th scope="row">{{=row.status}}</th>
+                </tr>
+                  {{custogeral+=row.custo_unitario*row.quantidade}}
+                  {{totalgeral+=row.preco_unitario*row.quantidade}}
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="">Você possui {{=total}} Produtos em vendas</p>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Navegação de página exemplo">
+  <ul class="pagination justify-content-end">
+        {{ if pagina != 1: }}
+        <li class="page-item">
+            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                <i class="fa fa-fw fa-arrow-left"></i>
+                Anterior&nbsp;</a>
+        </li>
+        {{ pass }}
+
+        {{ if pagina != paginas: }}
+        <li class="page-item">
+             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                Próximo&nbsp;
+                <i class="fa fa-fw fa-arrow-right"></i>
+            </a>
+        </li>
+        {{ pass }}
+    </ul>
+</nav>
+</div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{if (venda.preco_total!=totalgeral)or(venda.custo_total!=custogeral):}}
+{{venda.preco_total=totalgeral}}
+{{venda.custo_total=custogeral}}
+{{venda.update_record()}}
+{{redirect(URL('acs_item_venda','lista_status',args=venda.id))}}
+{{pass}}

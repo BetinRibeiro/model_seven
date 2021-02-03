@@ -49,13 +49,13 @@
                   <th scope="col">Telefone</th>
                   <th scope="col">Celular</th>
                   <th scope="col" class="text-center">Acessar</th>
+                  <th scope="col" class="text-center">Pedidos</th>
                 </tr>
               </thead>
               <tbody>
                   {{for row in rows:}}
                 <tr>
                   <th scope="row">{{=row.nome}}</th>
-                  <td>{{=row.razaosocial_nome}}</td>
                      {{row.telefone=(row.telefone).replace("(", "").replace(")", "").replace("-", "")}}
                     {{numero=row.telefone}}
                 {{row.telefone="("+(row.telefone)[0:2]+")"+(row.telefone)[2:7]+"-"+(row.telefone)[7:11]}}
@@ -73,7 +73,7 @@
                           {{=row.celular}}
                       </a>
                     </td>
-                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[1,row.id])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
+                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[row.id,1])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
                 </tr>
                   {{pass}}
               </tbody>

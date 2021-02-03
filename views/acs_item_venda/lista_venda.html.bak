@@ -1,6 +1,7 @@
 {{extend 'layout.html'}}
+{{from random import randrange, uniform}}
 
-
+{{=rows[0]}}
 <div class="py-5 text-center" >
     <div class="container">
       <div class="row">
@@ -29,7 +30,7 @@
                     <i class="fa fa-fw fa-power-off"></i>
                     Finalizar Venda
                 </a>
-                {{else:}}
+                {{elif venda.status=='Fechado':}}
                  <a class="btn btn-warning btn-block" href="{{=URL('fechar_pedido',args=venda.id)}}">
                     <i class="fa fa-fw fa-power-off"></i>
                     Abrir Venda

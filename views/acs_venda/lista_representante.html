@@ -1,0 +1,219 @@
+{{extend 'layout.html'}}
+
+{{import datetime}}
+{{mes_atual=primeira_data.month}}
+{{ano_atual=primeira_data.year}}
+{{mes="Janeiro"}}
+{{if primeira_data.month==2:}}
+{{mes="Fevereiro"}}
+
+{{elif primeira_data.month==3:}}
+{{mes="Março"}}
+
+{{elif primeira_data.month==4:}}
+{{mes="Abril"}}
+
+{{elif primeira_data.month==5:}}
+{{mes="Maio"}}
+
+{{elif primeira_data.month==6:}}
+{{mes="Junho"}}
+
+{{elif primeira_data.month==7:}}
+{{mes="Julho"}}
+
+{{elif primeira_data.month==8:}}
+{{mes="Agosto"}}
+
+{{elif primeira_data.month==9:}}
+{{mes="Setembro"}}
+
+{{elif primeira_data.month==10:}}
+{{mes="Outubro"}}
+
+{{elif primeira_data.month==11:}}
+{{mes="Novembro"}}
+
+{{elif primeira_data.month==12:}}
+{{mes="Dezembro"}}
+{{pass}}
+{{if primeira_data.month==1:}}
+    {{primeira_data=datetime.date(primeira_data.year-1, 12, 1)}}
+{{else:}}
+    {{primeira_data=datetime.date(primeira_data.year,  primeira_data.month-1, 1)}}
+{{pass}}
+ {{comissao=0}}
+<div class="py-5 text-center" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h2 class="mb-3">Lista de Vendas</h2>
+          <p class="lead">{{=representante.nome}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-4 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_usuario_empresa','index')}}">
+                    <i class="fa fa-fw fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </div>
+               <div class="col-md-4 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_cliente','lista_representante', args=representante.id)}}">
+                    <i class="fa fa-fw fa-users"></i>
+                    Ver Clientes
+                </a>
+            </div>
+               <div class="col-md-4 my-1">
+                <a class="btn btn-success btn-block" href="{{=URL('acs_registro','lista_representante', args=representante.id)}}">
+                    <i class="fa fa-fw fa-plus"></i>
+                    Recebimentos
+                </a>
+            </div>
+              
+          </div>
+        </div>
+        <div class="col-md-6">
+         <div class="row">
+                <div class="col-md-4 col-4 my-1">
+                    <a class="btn btn-secondary btn-block" href="{{=URL(args=[representante.id,primeira_data.month,primeira_data.year])}}">
+                        <i class="fa fa-fw fa-chevron-left"></i>&nbsp;Anterior 
+                    </a>
+                </div>
+                <div class="col-md-4 col-4 my-1">
+                    <h5 class=" text-center">{{=mes}} {{=ano}}</h5>
+                </div>
+                <div class="col-md-4 col-4 my-1">
+                    <a class="btn btn-secondary btn-block" href="{{=URL(args=[representante.id,ultima_data.month,ultima_data.year])}}">&nbsp;Próximo 
+                        <i class="fa fa-fw fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Valor</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Acessar</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{aberto=0}}
+                  {{fechado=0}}
+                  {{entregue=0}}
+                  {{devolvido=0}}
+                  {{for row in rows:}}
+                <tr>
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
+                  <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
+                  <td>R$ {{="{:,}".format(round(row.preco_total,1)).replace(",",".")}}0</td>
+                    <td>{{=row.status}}</td>
+                    <td><a class="btn btn-primary btn-block" href="{{=URL('acs_item_venda','lista_status',args=row.id)}}">
+                    <i class="fa fa-fw fa-folder"></i>
+                    Acessar
+                </a></td>
+                </tr>
+                 {{if row.status=="Aberto":}}
+                  {{aberto+=row.preco_total}}
+                 {{elif row.status=="Fechado":}}
+                  {{comissao_espe=row.preco_total*row.comissao_total}}
+                  {{if comissao_espe>0:}}
+                  {{comissao+=comissao_espe/100}}
+                  {{pass}}
+                  {{fechado+=row.preco_total}}
+                 {{elif row.status=="Entregue":}}
+                  {{comissao_espe=row.preco_total*row.comissao_total}}
+                  {{if comissao_espe>0:}}
+                  {{comissao+=comissao_espe/100}}
+                  {{pass}}
+                  {{entregue+=row.preco_total}}
+                 {{elif row.status=="Devolvido":}}
+                  {{devolvido+=row.preco_total}}
+                  {{pass}}
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class=" text-center">Total {{=total}} vendas</p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="mx-auto col-md-8">
+          <h3 class="mb-3">Relatório do Mês</h3>
+          <p class="lead">{{=mes}} de {{=ano}}</p>
+          <p class="lead">{{=representante.nome}}</p>
+        </div>
+      </div>
+      <div class="row justify-content-center  text-center">
+        <div class="col-md-6  col-12 p-2"> <i class="d-block fa fa-circle fa-3x mb-2 text-muted"></i>
+          <h4> <b>Venda</b></h4>
+          <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Aberto
+                <b>R$ {{="{:,}".format(round(aberto,1)).replace(",",".")}}0</b>
+              </li><hr>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Fechado
+                <b>R$ {{="{:,}".format(round(fechado,1)).replace(",",".")}}0</b>
+              </li><hr>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Entregue
+                <b>R$ {{="{:,}".format(round(entregue,1)).replace(",",".")}}0</b>
+              </li><hr>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Devolvido
+                <b>R$ {{="{:,}".format(round(devolvido,1)).replace(",",".")}}0</b>
+              </li><hr>
+          </ul>
+         {{total_venda=devolvido+entregue+fechado+aberto}}
+        </div>
+          <div class="col-md-6  col-12 p-2"> <i class="d-block fa fa-circle-o fa-3x mb-2 text-muted"></i>
+          <h4> <b>Comissão</b></h4>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Vendas
+                <b>R$ {{="{:,}".format(round(total_venda,1)).replace(",",".")}}0</b>
+                </li><hr>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Comissão (Fechado+Entregue)
+                <b>R$ {{="{:,}".format(round(comissao,1)).replace(",",".")}}0</b>
+                </li><hr>
+              
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Recebido
+                <b>R$ {{="{:,}".format(round(total_vales,1)).replace(",",".")}}0</b>
+                </li><hr>
+                {{saldo=comissao-total_vales}}
+                {{if saldo>=0:}}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Saldo
+                <b>R$ {{="{:,}".format(round(saldo,1)).replace(",",".")}}0</b>
+                </li><hr>
+                {{else:}}
+                <li class="list-group-item d-flex justify-content-between align-items-center text-danger">
+                Débito
+                <b>R$ {{="{:,}".format(round(saldo,1)).replace(",",".")}}0</b>
+                </li><hr>
+                {{pass}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

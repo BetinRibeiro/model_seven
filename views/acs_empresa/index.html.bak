@@ -12,8 +12,8 @@
   <div class="">
     <div class="container">
       <div class="row">
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header">Clientes</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x fa-users text-primary"></i>
@@ -23,54 +23,54 @@
             <div class="card-footer text-muted">500 Clientes</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header">Fornecedores</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-industry"></i>
               <p class="card-text">Lista de Fornecedores</p>
               <a href="{{=URL('acs_fornecedor','index')}}" class="btn btn-primary">Acessar</a>
             </div>
-            <div class="card-footer text-muted">500 Fornecedores</div>
+            <div class="card-footer text-muted">500 Cadastros</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header"> Produtos</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-tags"></i>
               <p class="card-text">Lista de Produtos</p>
-              <a href="#" class="btn btn-primary disabled">Acessar</a>
+              <a href="{{=URL('acs_produto','index')}}" class="btn btn-primary">Acessar</a>
             </div>
             <div class="card-footer text-muted">500 Produtos</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header"> Vendas</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-shopping-cart"></i>
               <p class="card-text">Lista de Vendas</p>
-              <a href="#" class="btn btn-primary disabled">Acessar</a>
+              <a href="{{=URL('acs_venda','index')}}" class="btn btn-primary">Acessar</a>
             </div>
             <div class="card-footer text-muted">Mês atual</div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3">
-          <div class="card text-center m-1">
-            <div class="card-header"> Produtos Vendidos</div>
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center">
+            <div class="card-header">Itens Venda</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-list"></i>
               <p class="card-text">Lista de Prod. Vendidos</p>
-              <a href="#" class="btn btn-primary disabled">Acessar</a>
+              <a href="{{=URL('acs_item_venda','index')}}" class="btn btn-primary">Acessar</a>
             </div>
             <div class="card-footer text-muted">Mês Atual</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header">BlackList</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-street-view"></i>
@@ -80,8 +80,8 @@
             <div class="card-footer text-muted">10 Clientes</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
             <div class="card-header"> Relatório</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-file-text"></i>
@@ -91,13 +91,46 @@
             <div class="card-footer text-muted">Mês Atual</div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center m-1">
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center">
             <div class="card-header"> Configuração</div>
             <div class="card-body">
               <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-cogs"></i>
-              <p class="card-text">Configuração</p>
+              <p class="card-text">Acesso Configuração</p>
+              <a href="{{=URL('acs_empresa','alterar')}}" class="btn btn-primary">Acessar</a>
+            </div>
+            <div class="card-footer text-muted">####</div>
+          </div>
+        </div>
+           <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center">
+            <div class="card-header"> Recebimentos</div>
+            <div class="card-body">
+              <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-list-alt "></i>
+              <p class="card-text">Acesso Recebivéis</p>
+              <a href="{{=URL('acs_venda','lista_recebimento')}}" class="btn btn-primary">Acessar</a>
+            </div>
+            <div class="card-footer text-muted">####</div>
+          </div>
+        </div>
+          <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center ">
+            <div class="card-header">Cheques</div>
+            <div class="card-body">
+              <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-address-card-o"></i>
+              <p class="card-text">Clientes em Débito</p>
               <a href="#" class="btn btn-primary disabled">Acessar</a>
+            </div>
+            <div class="card-footer text-muted">10 Clientes</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6 pb-3">
+          <div class="card text-center">
+            <div class="card-header"> Logins</div>
+            <div class="card-body">
+              <i class="fa fa-fw fa-1x py-1 fa-5x text-primary fa-user-o"></i>
+              <p class="card-text">Usuarios Representantes</p>
+              <a href="{{=URL('acs_usuario_empresa','index')}}" class="btn btn-primary">Acessar</a>
             </div>
             <div class="card-footer text-muted">####</div>
           </div>
@@ -105,3 +138,4 @@
       </div>
     </div>
   </div>
+</div>

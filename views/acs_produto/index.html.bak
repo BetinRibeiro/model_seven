@@ -63,7 +63,7 @@
                     {{else:}}
                     <td>Inativo</td>
                     {{pass}}
-                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_venda','lista_cliente',args=[1,row.id])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
+                  <td><a class="btn btn-primary btn-block" href="{{=URL('acs_item_venda','lista_produto',args=[row.produto,1])}}">Acessar<i class="fa fa-fw fa-sign-in"></i></a></td>
                 </tr>
                   {{pass}}
               </tbody>
@@ -73,7 +73,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <p class="">Você possui {{=total}} Clientes Cadastrados&nbsp;</p>
+          <p class="">Você possui {{=total}} Produtos Cadastrados&nbsp;</p>
         </div>
         <div class="col-md-6">
           <div class="row">

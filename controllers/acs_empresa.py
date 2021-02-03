@@ -19,4 +19,16 @@ def cadastrar():
     return locals()
 
 @auth.requires_login()
-def alterar(): return locals()
+def alterar(): 
+    response.view = 'generic.html' # use a generic view
+    usuario_empresa = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa = db.empresa(usuario_empresa.empresa)
+    db.empresa.id.writable=False
+    db.empresa.id.readable=False
+    form = SQLFORM(db.empresa, empresa.id, deletable=False)
+    if form.process().accepted:
+        session.flash = 'Projeto atualizado'
+        redirect(URL('index'))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)

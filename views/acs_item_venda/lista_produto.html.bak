@@ -1,0 +1,98 @@
+{{extend 'layout.html'}}
+<div class="py-5 text-center" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h2 class="mb-3">Lista de Vendas</h2>
+          <p class="lead">{{=produto.descricao}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_produto','index')}}">
+                    <i class="fa fa-fw fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </div>
+            <div class="col-md-6 my-1">
+                
+    <!-- atenção aqui pois vai entrar no fornecedor listando todos os produtos do mesmo  -->
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[1,produto.fornecedor])}}">
+                    <i class="fa fa-fw fa-user-circle"></i>
+                    Acessar Fornecedor
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+            
+         <h6>
+             {{=produto.descricao}}
+            </h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Representante</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Quant</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{for row in rows:}}
+                <tr>
+                  <th scope="row">{{=row.data_venda}}</th>
+                  <th scope="row">{{=row.representante.nome}}</th>
+                  <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
+                  <th scope="row">{{=row.quantidade}}</th>
+                </tr>
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="">Você possui {{=total}} Vendas desse produto</p>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Navegação de página exemplo">
+  <ul class="pagination justify-content-end">
+        {{ if pagina != 1: }}
+        <li class="page-item">
+            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                <i class="fa fa-fw fa-arrow-left"></i>
+                Anterior&nbsp;</a>
+        </li>
+        {{ pass }}
+
+        {{ if pagina != paginas: }}
+        <li class="page-item">
+             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                Próximo&nbsp;
+                <i class="fa fa-fw fa-arrow-right"></i>
+            </a>
+        </li>
+        {{ pass }}
+    </ul>
+</nav>
+</div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -218,3 +218,66 @@ ALTER TABLE "venda" ADD "preco_total" DOUBLE NOT NULL DEFAULT 0.0;
 timestamp: 2021-02-01T04:00:05.686075
 ALTER TABLE "venda" ADD "custo_total" DOUBLE NOT NULL DEFAULT 0.0;
 success!
+timestamp: 2021-02-02T21:36:36.782391
+ALTER TABLE "venda" ADD "comissao_total" DOUBLE NOT NULL DEFAULT 0.0;
+success!
+timestamp: 2021-02-02T23:38:24.631151
+CREATE TABLE "registro_empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "data_ocorrencia" DATE NOT NULL DEFAULT '2021-02-02',
+    "descricao" CHAR(512),
+    "valor" DOUBLE NOT NULL DEFAULT 0.0,
+    "tipo" CHAR(512),
+    "conferida" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-02T23:46:30.862290
+CREATE TABLE "registro_representante"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "representante" INTEGER REFERENCES "usuario_empresa" ("id") ON DELETE CASCADE  ,
+    "data_ocorrencia" DATE NOT NULL DEFAULT '2021-02-02',
+    "descricao" CHAR(512),
+    "valor" DOUBLE NOT NULL DEFAULT 0.0,
+    "tipo" CHAR(512),
+    "conferida" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-02T23:46:32.509456
+CREATE TABLE "registro_cliente"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "cliente" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "venda" INTEGER REFERENCES "venda" ("id") ON DELETE CASCADE  ,
+    "data_ocorrencia" DATE NOT NULL DEFAULT '2021-02-02',
+    "descricao" CHAR(512),
+    "valor" DOUBLE NOT NULL DEFAULT 0.0,
+    "tipo" CHAR(512),
+    "conferida" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-02-03T03:40:01.692419
+ALTER TABLE "venda" ADD "recebido_total" DOUBLE NOT NULL DEFAULT 0.0;
+success!
+timestamp: 2021-02-03T05:27:54.258336
+ALTER TABLE "venda" ADD "conferida" CHAR(1);
+success!
+timestamp: 2021-02-03T05:35:13.411510
+ALTER TABLE "venda" ADD "devolvido_total" DOUBLE NOT NULL DEFAULT 0.0;
+success!

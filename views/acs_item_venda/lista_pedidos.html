@@ -1,0 +1,117 @@
+{{extend 'layout.html'}}
+<div class="py-5 text-center" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h2 class="mb-3">Lista de Pedidos</h2>
+          <p class="lead">{{=fornecedor.nome}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_fornecedor','index')}}">
+                    <i class="fa fa-fw fa-arrow-left"></i>
+                    Todos Fornecedores
+                </a>
+            </div>
+            <div class="col-md-6 my-1">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_empresa','index')}}">
+                    <i class="fa fa-fw fa-list"></i>
+                    Voltar ao Inicio
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group row m-2">
+                <form id="form">
+                    <ul class="list-inline text-right" >
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Aberto">Aberto</li>
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Fechado">Fechado</li>
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Entregue">Entregue</li>
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Devolvido">Devolvido</li>
+                        <li class="list-inline-item"><button class="btn btn-primary"   id="btn-salvar" type="submit">Filtrar</button></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Representante</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Produto</th>
+                  <th scope="col">Quant</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{for row in rows:}}
+                <tr>
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
+                  <th scope="row">{{=row.representante.nome}}</th>
+                  <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
+                  <th scope="row">{{=row.produto.descricao}}</th>
+                  <th scope="row">{{=row.quantidade}}</th>
+                  <th scope="row">{{=row.status}}</th>
+                </tr>
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="">Fornecedor possui {{=total}} pedidos</p>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Navegação de página exemplo">
+  <ul class="pagination justify-content-end">
+        {{ if pagina != 1: }}
+        <li class="page-item">
+            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                <i class="fa fa-fw fa-arrow-left"></i>
+                Anterior&nbsp;</a>
+        </li>
+        {{ pass }}
+
+        {{ if pagina != paginas: }}
+        <li class="page-item">
+             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                Próximo&nbsp;
+                <i class="fa fa-fw fa-arrow-right"></i>
+            </a>
+        </li>
+        {{ pass }}
+    </ul>
+</nav>
+</div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+    var form = document.querySelector('#form');
+    var botao = document.querySelector('#btn-salvar');
+
+    botao.addEventListener('click', function (event) {
+        event.preventDefault();
+        window.location.href = "{{=URL('lista_pedidos')}}/"+{{=fornecedor.id}}+"/1/"+(form.q1.value);
+    });
+</script>

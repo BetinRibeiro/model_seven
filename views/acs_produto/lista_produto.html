@@ -1,5 +1,12 @@
 {{extend 'layout.html'}}
-
+{{from random import randrange, uniform}}
+{{a=pagina}}
+{{if False:}}
+{{while a!=10:}}
+{{db.produto.insert(descricao="Tênis - "+str(randrange(1000, 9999))+" - Amarelo", fornecedor=fornecedor.id, preco_unitario=randrange(45, 85), custo_unitario=randrange(10, 35))}}
+{{a+=1}}
+{{pass}}
+{{pass}}
 
 <div class="py-5 text-center" >
     <div class="container">
@@ -62,6 +69,7 @@
               </thead>
               <tbody>
                   {{for row in rows:}}
+                  
                 <tr>
                   <th scope="row">{{=row.descricao}}</th>
                   <td>R$ {{="{:,}".format(round(row.custo_unitario,1)).replace(",",".")}}0</td>

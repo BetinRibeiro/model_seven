@@ -1,38 +1,102 @@
 {{extend 'layout.html'}}
-{{block header}}
-<center style="background-color: #333; color:white; padding:30px">
-  <h1>/{{=request.application}}/{{=request.controller}}/{{=request.function}}
-</center>
-{{end}}
-{{if 'message' in globals():}}
-<h2>{{=message}}</h2>
-<p class="lead">{{=T('How did you get here?')}}</p>
-<ol>
-  <li>{{=T('You are successfully running web2py')}}</li>
-  <li>{{=XML(T('You visited the url %s', A(request.env.path_info,_href=request.env.path_info)))}}</li>
-  <li>{{=XML(T('Which called the function %s located in the file %s',
-    (A(request.function+'()',_href='#'),
-    A('web2py/applications/%(application)s/controllers/%(controller)s.py' % request,
-    _href=URL('admin','default','peek', args=(request.application,'controllers',request.controller+'.py'))))))}}</li>
-  <li>{{=XML(T('The output of the file is a dictionary that was rendered by the view %s',
-    A('web2py/applications/%(application)s/views/%(controller)s/index.html' % request,
-    _href=URL('admin','default','peek',args=(request.application,'views',request.controller,'index.html')))))}}</li>
-  <li>{{=T('You can modify this application and adapt it to your needs')}}</li>
-</ol>
-<center style="padding:50px">
-  <a class="btn btn-primary" href="{{=URL('admin','default','index', scheme='https')}}">
-    <i class="glyphicon glyphicon-cog"></i>
-    {{=T("admin")}}
-  </a>
-  <a class="btn btn-secondary" href="{{=URL('examples','default','index')}}">{{=T("Online examples")}}</a>
-  <a class="btn btn-secondary" href="http://web2py.com">web2py.com</a>
-  <a class="btn btn-secondary" href="http://web2py.com/book">{{=T('Documentation')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','api_get_user_email')}}">{{=T('API Example')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','grid/auth_user')}}">{{=T('Grid Example')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','wiki')}}">{{=T('Wiki Example')}}</a>
-</center>
-{{elif 'content' in globals():}}
-{{=content}}
-{{else:}}
-{{=BEAUTIFY(response._vars)}}
-{{pass}}
+<div class="pt-5" >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mr-auto order-2 order-md-1"> <img class="img-fluid d-block" src="https://cdn.pixabay.com/photo/2013/07/12/18/39/smartphone-153650_960_720.png"> </div>
+        <div class="px-md-5 p-3 d-flex flex-column align-items-start justify-content-center col-md-7 order-1 order-md-2"> <i class="d-block fa fa-stop-circle fa-4x mb-3 text-muted"></i>
+          <h1>Uma nova Tecnologia</h1>
+          <p class="mb-3 lead">Uma nova tecnologia de desenvolvimento de sistemas. Ao contrário dos tradicionais aplicativos, um Progressive Web App pode ser considerado como uma evolução híbrida entre as web sites com funcionalidades e um aplicativo de dispositivo móvel.</p>
+          <div class="row text-muted">
+            <div class="col-12 p-2"> <i class="d-inline fa fa-apple fa-3x"></i> <i class="d-inline fa fa-android fa-3x mx-4"></i> <i class="d-inline fa fa-windows fa-3x"></i> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3">
+    <div class="container">
+      <div class="row my-4 d-flex justify-content-center">
+        <div class="d-flex flex-column justify-content-center p-3 col-lg-7">
+          <p class="lead mb-0">Acesse nosso sistema através do seu navegador, com a possibilidade de instalar no seu dispositivo móvel, computador, notebook independente do seu sistema, Windows, Linux, Mac, andróide, i-phone e qualquer outro.</p>
+           <p class="lead mb-0">Não existe limites para o seu negocio, cadastre seus usuários, seus produtos e fornecedores e consiga o acesso das vendas e gerenciamento de todo seu negocio atraves de relatórios mensais</p>
+</p>
+        </div>
+        <div class="p-0 col-lg-3"> <img class="img-fluid d-block" src="https://cdn.pixabay.com/photo/2012/04/13/17/00/lcd-32872_960_720.png"> </div>
+      </div>
+      <div class="row my-4 d-flex justify-content-center">
+        <div class="p-0 order-2 order-lg-1 col-lg-3"> <img class="img-fluid d-block" src="https://cdn.pixabay.com/photo/2017/02/14/07/20/competition-2064865_960_720.jpg"> </div>
+        <div class="d-flex flex-column justify-content-center p-3 col-lg-7 order-1 order-lg-2">
+          <p class="lead mb-0">Quantos representantes de vendas você tem? Imagine que sem custos adicionais você poderá liberar acesso para ele tirar os pedidos atravez do seu próprio dispositivo móvel</p>
+          <p class="lead mb-0">Conheça mais sobre nosso sistema através do suporte técnico e aproveite todas as vantagens oferecidas por ele.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3 text-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6 p-4"> <i class="d-block fa fa-circle fa-3x mb-2 text-muted"></i>
+          <h4> <b>Administrativo</b> </h4>
+          <p>Acesso para cadastrar todos fornecedores e produtos e verificar todos os relatorios com custos, investimentos e lucrativodade.</p>
+        </div>
+        <div class="col-lg-5 col-md-6 p-4"> <i class="d-block fa fa-circle-o fa-3x mb-2 text-muted"></i>
+          <h4> <b>Representante</b> </h4>
+          <p>Cadastro de clientes e liberação a pesquisar produtos e tirar pedidos de vendas, de maneira rápida, simples e objetiva.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5 text-center">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-12">
+          <h1 class="mb-3">Nossa Equipe</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="https://avatars.githubusercontent.com/u/11061602?s=460&u=8fa6492bf9d1c83cf1acf0c58ac6ae79c7217245&v=4" width="200" alt="Card image cap">
+          <h4> <b>Rogoberto Ribeiro</b> </h4>
+          <p>CEO fundador</p>
+          <p class="mb-0"> <i>"Nada é impossivel para aquele que crê e persegue seus sonhos!"</i> </p>
+        </div>
+        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="https://avatars.githubusercontent.com/u/11061602?s=460&u=8fa6492bf9d1c83cf1acf0c58ac6ae79c7217245&v=4" width="200" alt="Card image cap">
+          <h4> <b>Helana Oliveira</b> </h4>
+          <p>Co-founder</p>
+          <p class="mb-0"> <i>"Todo trabalho feito com apor e paixão se transforma em diversão"</i> </p>
+        </div>
+        <div class="col-lg-4 col-6 p-4"> <img class="https://avatars.githubusercontent.com/u/12850755?s=460&u=cdb7f528cd6ae0a50fcc22ff6e9151c01fa86ffc&v=4" width="200" alt="Card image cap">
+          <h4> <b>Hiago Fagundes</b> </h4>
+          <p>CTO</p>
+          <p class="mb-0"> <i>"Saber o que quer é irrelevante quando você sabe exatamente o que não quer."</i> </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9">
+          <p class="lead">Deixe seu telefone e entraremos em contato</p>
+          <form class="form-inline">
+            <div class="form-group"> <input type="text" class="form-control" placeholder="Seu numero" required="required"> </div> <button type="submit" class="btn btn-primary ml-3">Enviar</button>
+          </form>
+        </div>
+        <div class="col-4 col-md-1 align-self-center"> <a href="#">
+            <i class="fa fa-fw fa-2x fa-facebook-official text-primary"></i>
+          </a> </div>
+        <div class="col-4 col-md-1 align-self-center"> <a href="#">
+            <i class="fa fa-fw fa-2x fa-whatsapp text-success"></i>
+          </a> </div>
+        <div class="col-4 col-md-1 align-self-center"> <a href="#">
+            <i class="fa fa-fw fa-2x text-danger fa-instagram"></i>
+          </a> </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mt-3 text-center">
+          <p>© Copyright 2020 Arsenal System - Todos os Direitos Reservados</p>
+        </div>
+      </div>
+    </div>
+  </div>
