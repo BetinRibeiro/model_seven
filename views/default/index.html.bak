@@ -1,11 +1,45 @@
 {{extend 'layout.html'}}
-<div class="pt-5" >
+<style type="text/css">
+       #menu{
+           width: 300px;
+         margin: 80px auto;
+      }
+      #menu img{
+         -webkit-transition: -webkit-transform .3s ease-in-out;
+         border-style: none;
+           transition: transition .3s ease-in-out;
+           -moz-transition: -moz-transition .3s ease-in-out;
+           -o-transition: -o-transition .3s ease-in-out;
+      }
+      #op img:hover
+      {
+           transform: scale(1.02);
+
+           -moz-transform: scale(1.02); /* Firefox 4 */
+
+           -o-transform: scale(1.02); /* Opera */
+
+         -webkit-transform: scale(1.02);  /* Chrome */
+      }
+     </style>
+<div class="pt-5" id="op">
     <div class="container">
       <div class="row">
         <div class="col-md-4 mr-auto order-2 order-md-1"> <img class="img-fluid d-block" src="https://cdn.pixabay.com/photo/2013/07/12/18/39/smartphone-153650_960_720.png"> </div>
-        <div class="px-md-5 p-3 d-flex flex-column align-items-start justify-content-center col-md-7 order-1 order-md-2"> <i class="d-block fa fa-stop-circle fa-4x mb-3 text-muted"></i>
+        <div class="px-md-5 p-3 d-flex flex-column align-items-start justify-content-center col-md-7 order-1 order-md-2"> 
           <h1>Uma nova Tecnologia</h1>
           <p class="mb-3 lead">Uma nova tecnologia de desenvolvimento de sistemas. Ao contrário dos tradicionais aplicativos, um Progressive Web App pode ser considerado como uma evolução híbrida entre as web sites com funcionalidades e um aplicativo de dispositivo móvel.</p>
+            
+      <div class="row">
+          <div class="col-6 mr-auto  align-items-start"> 
+              <a class="btn btn-primary" href="{{=URL('acs_empresa','index')}}" >Acessar</a>
+          </div>
+          {{if not auth.user:}}
+          <div class="col-6 mr-auto  align-items-start">
+              <a class="btn btn-primary" href="#" >Cadastrar</a>
+          </div>
+          {{pass}}
+      </div>
           <div class="row text-muted">
             <div class="col-12 p-2"> <i class="d-inline fa fa-apple fa-3x"></i> <i class="d-inline fa fa-android fa-3x mx-4"></i> <i class="d-inline fa fa-windows fa-3x"></i> </div>
           </div>
@@ -47,30 +81,54 @@
       </div>
     </div>
   </div>
-  <div class="py-5 text-center">
+  <div class="text-center py-3" >
     <div class="container">
       <div class="row">
-        <div class="mx-auto col-md-12">
-          <h1 class="mb-3">Nossa Equipe</h1>
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Alguns dos Nossos Trabalhos</h1>
+          <p class="lead">Conheça nosso portfólio</p>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="https://avatars.githubusercontent.com/u/11061602?s=460&u=8fa6492bf9d1c83cf1acf0c58ac6ae79c7217245&v=4" width="200" alt="Card image cap">
-          <h4> <b>Rogoberto Ribeiro</b> </h4>
-          <p>CEO fundador</p>
-          <p class="mb-0"> <i>"Nada é impossivel para aquele que crê e persegue seus sonhos!"</i> </p>
+      <div class="row" id="op">
+        <div class="col-md-4 p-3">
+          <div class="card box-shadow">
+            <img class="card-img-top" src="https://rogoberto.pythonanywhere.com/welcome/static/images/aluminum.jpg">
+            <div class="card-body">
+              <p class="card-text">Controle de vendas e cobranças, hoje com mais de 15 mil acessos ao sistema e mais de 10 empresas parceiras no ramo de fabricação e venda de aluminio.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-sm btn-outline-secondary" href="https://rogoberto.pythonanywhere.com/aluminum/">Ver</a>
+                </div> <small class="text-muted">Junho 2019</small>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="https://avatars.githubusercontent.com/u/11061602?s=460&u=8fa6492bf9d1c83cf1acf0c58ac6ae79c7217245&v=4" width="200" alt="Card image cap">
-          <h4> <b>Helana Oliveira</b> </h4>
-          <p>Co-founder</p>
-          <p class="mb-0"> <i>"Todo trabalho feito com apor e paixão se transforma em diversão"</i> </p>
+        <div class="col-md-4 p-3">
+          <div class="card box-shadow">
+            <img class="card-img-top" src="https://rogoberto.pythonanywhere.com/welcome/static/images/model_two.jpg">
+            <div class="card-body">
+              <p class="card-text">Gerenciamento de Locação de imoveis residenciais e comerciais, geração de contratos automatizados, recebimentos e agendamento de recebimento.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-sm btn-outline-secondary" href="https://arsenalsystem.pythonanywhere.com/model_two">Ver</a>
+                </div> <small class="text-muted">Janeiro 2020</small>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-lg-4 col-6 p-4"> <img class="https://avatars.githubusercontent.com/u/12850755?s=460&u=cdb7f528cd6ae0a50fcc22ff6e9151c01fa86ffc&v=4" width="200" alt="Card image cap">
-          <h4> <b>Hiago Fagundes</b> </h4>
-          <p>CTO</p>
-          <p class="mb-0"> <i>"Saber o que quer é irrelevante quando você sabe exatamente o que não quer."</i> </p>
+        <div class="col-md-4 p-3">
+          <div class="card box-shadow">
+            <img class="card-img-top" src="https://rogoberto.pythonanywhere.com/welcome/static/images/model_seven.jpg">
+            <div class="card-body">
+              <p class="card-text">Conheça nosso site Oficial, com todos os nossos serviços e produtos de sistema e tecnologias para melhorar, ampliar e organizar sua empresa</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-sm btn-outline-secondary" href="https://rogoberto.pythonanywhere.com/">Ver</a>
+                </div> <small class="text-muted">Janeiro 2021</small>
+              </div>
+            </div>
+          </div>
         </div>
-        
       </div>
     </div>
   </div>

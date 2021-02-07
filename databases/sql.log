@@ -281,3 +281,4 @@ success!
 timestamp: 2021-02-03T05:35:13.411510
 ALTER TABLE "venda" ADD "devolvido_total" DOUBLE NOT NULL DEFAULT 0.0;
 success!
+success!

@@ -1,0 +1,3 @@
+{{extend 'layout.html'}}
+<h1>Este é o template acs_registro/lista_recebimento_cliente.html</h1>
+{{=BEAUTIFY(response._vars)}}

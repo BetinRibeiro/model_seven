@@ -91,21 +91,32 @@
             <table class="table table-striped table-borderless">
               <thead>
                 <tr>
-                  <th scope="col">Data</th>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Custo</th>
-                  <th scope="col">Valor</th>
-                  <th scope="col">Recebido</th>
-                  <th scope="col">Devolvido</th>
-                  <th scope="col">Saldo</th>
-                  <th scope="col">Acessar</th>
+                  <th>Data</th>
+                  <th>Cliente</th>
+                  <th>Custo</th>
+                  <th>Valor</th>
+                  <th>Recebido</th>
+                  <th>Devolvido</th>
+                  <th>Saldo</th>
+                  <th>Acessar</th>
                 </tr>
               </thead>
               <tbody>
                   {{for row in rows:}}
+                  {{if row.preco_total!=row.recebido_total:}}
+                  
+                <tr class="table-danger">
+                    <th>#</th>
+                  <th >{{=row.cliente.razaosocial_nome}}</th>
+                    <td colspan="5">Faça os Registros de Recebimentos <i class="fa fa-fw fa-chevron-right"></i></td>
+                    <td><a class="btn btn-primary btn-block" href="{{=URL('acs_registro','lista_venda',args=row.id)}}">
+                    <i class="fa fa-fw fa-folder"></i>
+                    Acessar
+                </a></td>
+                  {{else:}}
                 <tr>
-                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
-                  <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
+                  <th>{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
+                  <th>{{=row.cliente.razaosocial_nome}}</th>
                   <td>R$ {{="{:,}".format(round(row.custo_total,1)).replace(",",".")}}0</td>
                   <td>R$ {{="{:,}".format(round(row.preco_total,1)).replace(",",".")}}0</td>
                   <td>R$ {{="{:,}".format(round(row.recebido_total,1)).replace(",",".")}}0</td>
@@ -115,6 +126,7 @@
                     <i class="fa fa-fw fa-folder"></i>
                     Acessar
                 </a></td>
+                    {{pass}}
                 </tr>
                   {{pass}}
               </tbody>

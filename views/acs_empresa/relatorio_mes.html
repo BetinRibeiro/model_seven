@@ -1,0 +1,143 @@
+{{extend 'layout.html'}}
+
+{{import datetime}}
+{{mes_atual=primeira_data.month}}
+{{ano_atual=primeira_data.year}}
+{{mes="Janeiro"}}
+{{if primeira_data.month==2:}}
+{{mes="Fevereiro"}}
+
+{{elif primeira_data.month==3:}}
+{{mes="Março"}}
+
+{{elif primeira_data.month==4:}}
+{{mes="Abril"}}
+
+{{elif primeira_data.month==5:}}
+{{mes="Maio"}}
+
+{{elif primeira_data.month==6:}}
+{{mes="Junho"}}
+
+{{elif primeira_data.month==7:}}
+{{mes="Julho"}}
+
+{{elif primeira_data.month==8:}}
+{{mes="Agosto"}}
+
+{{elif primeira_data.month==9:}}
+{{mes="Setembro"}}
+
+{{elif primeira_data.month==10:}}
+{{mes="Outubro"}}
+
+{{elif primeira_data.month==11:}}
+{{mes="Novembro"}}
+
+{{elif primeira_data.month==12:}}
+{{mes="Dezembro"}}
+{{pass}}
+{{if primeira_data.month==1:}}
+    {{primeira_data=datetime.date(primeira_data.year-1, 12, 1)}}
+{{else:}}
+    {{primeira_data=datetime.date(primeira_data.year,  primeira_data.month-1, 1)}}
+{{pass}}{{extend 'layout.html'}}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<div class="py-5 text-center" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Relatorio do Mês</h1>
+          <p class="lead">{{=empresa.razaosocial}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row my-2">
+            <div class="col-md-4">
+                <a class="btn btn-primary btn-block" href="{{=URL(args=[primeira_data.month,primeira_data.year])}}">
+                <i class="fa fa-angle-double-left fa-fw"></i> Anterior
+                </a>
+              </div>
+            <div class="col-md-4"><a class="btn btn-primary btn-block disabled" href="#" contenteditable="true">{{=mes}}</a></div>
+            <div class="col-md-4">
+                <a class="btn btn-primary btn-block" href="{{=URL(args=[ultima_data.month,ultima_data.year])}}">
+                    Próximo <i class="fa fa-angle-double-right  fa-fw"></i>
+                </a>
+              </div>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="border list-group-item d-flex justify-content-between">Total Venda<br>
+              <b>R$ {{="{:,}".format(round(venda,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between ">Recebimento<br>
+              <b>R$ {{="{:,}".format(round(recebido,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between ">Custo Compra<br>
+              <b>R$ {{="{:,}".format(round(custo,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between ">Comissão<br>
+                {{if comissao>0:}}
+                {{comissao=comissao/10}}
+                {{pass}}
+              <b>R$ {{="{:,}".format(round(comissao,1)).replace(",",".")}}0</b></li>
+              {{margem_b=recebido-custo-comissao}}
+            <li class=" border list-group-item d-flex justify-content-between text-primary ">Margem Bruta<br>
+              <b>R$ {{="{:,}".format(round(margem_b,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between"><b>Despesas</b><br>
+              <b>R$ {{="{:,}".format(round(despesa,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between text-primary"><b>Margem Liquida</b><br>
+                {{margem_l=margem_b-despesa}}
+              <b>R$ {{="{:,}".format(round(margem_l,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between"><b>Cheques Voltados</b><br>
+              <b>R$ {{="{:,}".format(round(cheque_voltado,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between text-primary"><b>Saldo</b><br>
+                {{saldo=margem_l-cheque_voltado}}
+              <b>R$ {{="{:,}".format(round(saldo,1)).replace(",",".")}}0</b></li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+            <canvas  id="myChart" width="400" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+    var ctx = document.getElementById('myChart');
+    var dados =  [parseFloat({{=recebido}}), parseFloat({{=custo}}), parseFloat({{=comissao}}), parseFloat({{=despesa}}), parseFloat({{=cheque_voltado}})];
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Recebido', 'Custo', 'Comissão', 'Despesa', 'Cheques Voltados'],
+        datasets: [{
+            label: '# of Votes',
+            data: dados,
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        }
+    }
+});
+</script>

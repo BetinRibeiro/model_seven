@@ -64,6 +64,7 @@
 'Confirm Password': 'Confirm Password',
 'Controller': 'Controlador',
 'Copyright': 'Copyright',
+'cpf - 000.000.000-00 ou cnpj 00.000.000/0001-00': 'cpf - 000.000.000-00 ou cnpj 00.000.000/0001-00',
 'Created By': 'Created By',
 'Created On': 'Created On',
 'Current request': 'Requisição atual',

@@ -21,31 +21,30 @@
                     Voltar
                 </a>
             </div>
+              {{if venda.preco_total>venda.recebido_total:}}
                <div class="col-md-4 my-1">
-                <a class="btn btn-primary btn-block" href="{{=URL('acs_venda','lista_recebimento', args=venda.id)}}">
+                <a class="btn btn-success btn-block" href="{{=URL('cadastrar_registro_cliente', args=venda.id)}}">
                     <i class="fa fa-fw fa-plus"></i>
                     Inserir
                 </a>
             </div>
+              {{else:}}
               <div class="col-md-4 my-1">
-                <a class="btn btn-success btn-block" href="{{=URL('cadastrar_registro_cliente', args=venda.id)}}">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_item_venda','lista_recebimento', args=venda.id)}}">
                     <i class="fa fa-fw fa-file-text-o"></i>
                     Acessar Venda
                 </a>
             </div>
-               <div class="col-md-4 my-1">
-                   <h5>
-                       {{=venda.preco_total}}
-                   </h5>
-              </div>
+              {{pass}}
+              
                
               
           </div>
         </div>
         <div class="col-md-6">
-         <div class="row">
-                ################
-            </div>
+         <h4>
+             Valor da Venda <b>R$ {{="{:,}".format(round(venda.preco_total,1)).replace(",",".")}}0</b>
+            </h4>
         </div>
       </div>
       <div class="row">
@@ -97,7 +96,6 @@
             </p>
         </div>
     </div>
- 
     <div class="container text-center">
       <div class="row">
         <div class="col-md-12 text-center">
@@ -107,13 +105,13 @@
       <div class="row justify-content-center">
         <div class="col-md-4 p-4"> <i class="d-block fa fa-circle fa-3x mb-2 text-muted"></i>
           <h4> <b>Recebido</b></h4>
-          <p>Total Recebido - <b>R$ {{="{:,}".format(round(venda.recebido_total,1)).replace(",",".")}}0</b></p>
+          <p>Total Recebido - <b>R$ {{="{:,}".format(round(venda.recebido_total-devolvido,1)).replace(",",".")}}0</b></p>
           <p>Total Voltou - <b>R$ {{="{:,}".format(round(devolvido,1)).replace(",",".")}}0</b></p>
         </div>
         <div class="col-md-4 col-6 p-4"> <i class="d-block fa fa-circle-o fa-3x mb-2 text-muted"></i>
           <h4> <b>Venda</b></h4>
           <p>Custo da Venda - <b>R$ {{="{:,}".format(round(venda.custo_total,1)).replace(",",".")}}0</b></p>
-          <p>Preço da Venda - <b>R$ {{="{:,}".format(round(venda.preco_total-devolvido,1)).replace(",",".")}}0</b></p>
+          <p>Preço da Venda - <b>R$ {{="{:,}".format(round(venda.preco_total,1)).replace(",",".")}}0</b></p>
         </div>{{comissao=0}}
           {{if (venda.comissao_total>0)and(venda.preco_total>0):}}
           {{comissao=venda.preco_total*venda.comissao_total/100}}
@@ -131,12 +129,15 @@
       </div>
     </div>
   </div>
-{{if venda.recebido_total!=total:}}
 {{if venda.recebido_total>0:}}
-      {{venda.conferida=True}}
+{{venda.conferida=True}}
 {{else:}}
-      {{venda.conferida=False}}
+{{venda.conferida=False}}
 {{pass}}
+      
+{{venda.update_record()}}
+{{if (venda.recebido_total!=total)or(venda.devolvido_total!=devolvido):}}
+
 {{venda.recebido_total=total}}
 {{venda.devolvido_total=devolvido}}
 {{venda.update_record()}}

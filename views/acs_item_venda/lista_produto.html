@@ -23,7 +23,7 @@
             <div class="col-md-6 my-1">
                 
     <!-- atenção aqui pois vai entrar no fornecedor listando todos os produtos do mesmo  -->
-                <a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[1,produto.fornecedor])}}">
+                <a class="btn btn-primary btn-block" href="{{=URL('acs_produto','lista_produto',args=[produto.fornecedor,1])}}">
                     <i class="fa fa-fw fa-user-circle"></i>
                     Acessar Fornecedor
                 </a>

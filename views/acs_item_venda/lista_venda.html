@@ -1,4 +1,5 @@
 {{extend 'layout.html'}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <div class="py-5 text-center" >
     <div class="container">
       <div class="row">
@@ -32,23 +33,23 @@
                     <i class="fa fa-fw fa-power-off"></i>
                     Abrir Venda
                 </a>
+                </div>
+            <div class="col-md-4 my-1">
+                <a class="btn btn-info btn-block" href="{{=URL('recibo_venda',args=(venda.id*987))}}">
+                    <i class="fa fa-fw fa-file"></i>
+                    Imprimir Recibo
+                </a>
                 {{pass}}
                 {{else:}}
-                <a class="btn btn-primary btn-block disabled" href="{{=URL('fechar_pedido',args=venda.id)}}">
+                <a class="btn btn-primary btn-block disabled" href="{{=URL('fechar_pedido',args=(venda.id))}}">
                 <i class="fa fa-fw fa-circle-o-notch "></i>
                     Aguardando
                 </a>
                 {{pass}}
             </div>
                <div class="col-md-4 my-1">
-                   
                 {{if venda.status=='Aberto':}}
                 <a class="btn btn-primary btn-block" href="{{=URL('buscar',args=venda.id)}}">
-                    <i class="fa fa-fw fa-search"></i>
-                    Buscar Produto
-                </a>
-                   {{else:}}
-                   <a class="btn btn-primary btn-block disabled" href="{{=URL('buscar',args=venda.id)}}">
                     <i class="fa fa-fw fa-search"></i>
                     Buscar Produto
                 </a>
@@ -73,7 +74,7 @@
                   <th scope="col">Quant</th>
                   <th scope="col">Preço</th>
                   <th scope="col">Total</th>
-                  <th scope="col" class="text-center">Acessar</th>
+                    <th  class="text-center"><p class="btn btn-danger disabled"><i class="fa fa-fw fa-trash"></i></p></th>
                 </tr>
               </thead>
               <tbody>
@@ -101,14 +102,11 @@
           </div>
         </div>
       </div>
+        {{if usuario.tipo!="Representante":}}
       <div class="row">
         <div class="col-md-6">
-          <p class="">Pedido total está em  <b>R$ {{="{:,}".format(round(totalgeral,1)).replace(",",".")}}0</b></p>
-            {{if venda.preco_total!=totalgeral:}}
-            {{venda.preco_total=totalgeral}}
-            {{venda.update_record()}}
-            {{redirect(URL('lista_venda', args=venda.id))}}
-            {{pass}}
+         
+            
         </div>
         <div class="col-md-6">
           <div class="row">
@@ -137,6 +135,73 @@
 </div>
         </div>
       </div>
+  {{if usuario!="Representante":}}
+      <div class="row">
+        <div class="col-md-6" ><ul class="list-group list-group-flush">
+            <li class="border list-group-item d-flex justify-content-between">Valor da Venda<br>
+              <b>R$ {{="{:,}".format(round(venda.preco_total,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between ">Custo Mercadoria<br>
+              <b>R$ {{="{:,}".format(round(venda.custo_total,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between ">Recebido (Pagamento)<br>
+              <b>R$ {{="{:,}".format(round(venda.recebido_total,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between " >Devolvido (cheques)<br>
+              <b>R$ {{="{:,}".format(round(venda.devolvido_total,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between"><b>Comissão</b><br>
+              <b>R$ {{="{:,}".format(round(venda.comissao_total,1)).replace(",",".")}}0</b></li>
+            <li class=" border list-group-item d-flex justify-content-between text-primary"><b>Status</b><br>
+              <b>{{=venda.status}}</b></li>
+          </ul></div>
+        <div class="col-md-6">
+            <canvas  id="myChart" width="400" height="220"></canvas>
+        </div>
+      </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6 my-1">
+                
+            </div>
+            
+        <div class="col-md-6  my-1">
+              <center>
+          <h3 class=" my-1">Custo Mercadoria - R$ {{="{:,}".format(round(venda.custo_total,1)).replace(",",".")}}0
+            </h3>
+                  </center>
+        </div>
+      </div>
+        <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Descrição</th>
+                  <th scope="col">Quant</th>
+                  <th scope="col">Custo</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{totalgeral=0}}
+                  {{for row in rows:}}
+                <tr>
+                  <th scope="row">{{=row.produto.descricao}}</th>
+                  <td>{{=row.quantidade}}</td>
+                  <td>R$ {{="{:,}".format(round(row.custo_unitario,1)).replace(",",".")}}0</td>
+                    {{totalparcial=row.quantidade*row.custo_unitario}}
+                  <td>R$ {{="{:,}".format(round(totalparcial,1)).replace(",",".")}}0</td>
+                  
+                </tr>
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+        {{pass}}
+        
+        {{pass}}
+        
+        
     </div>
   </div>
 
@@ -153,6 +218,46 @@
     if(e.which == 13) {
      var busca= inputElement.value;
         window.location.href = "{{=URL('lista_produto')}}/"+{{=cliente.id}}+"/1/"+busca
+    }
+});
+</script>
+<script>
+    var ctx = document.getElementById('myChart');
+    var dados =  [parseFloat({{=venda.preco_total}}), parseFloat({{=venda.custo_total}}), parseFloat({{=venda.recebido_total}}), parseFloat({{=venda.devolvido_total}}), parseFloat({{=venda.comissao_total}})];
+    var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Valor Venda', 'Custo Mercadoria', 'Recebido Pagamentos', 'Cheques Devolvidos', 'Comissão'],
+        datasets: [{
+            label: '# of Votes',
+            data: dados,
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        }
     }
 });
 </script>

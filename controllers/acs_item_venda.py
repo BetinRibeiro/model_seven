@@ -1,4 +1,41 @@
 # -*- coding: utf-8 -*-
+def recibo_venda():
+    busca=(request.args(0, cast=int)/987)
+    venda=db.venda(busca)
+    rows = db((db.item_venda.venda==venda.id)).select()
+    return locals()
+@auth.requires_login()
+def alterar_custo():
+    response.view = 'generic.html' # use a generic view
+    item_venda = db.item_venda(request.args(0, cast=int))
+    request.function='Alterar Custo - '+item_venda.produto.descricao+" "+str(item_venda.custo_unitario)
+    db.item_venda.id.writable=False
+    db.item_venda.id.readable=False
+    db.item_venda.quantidade.readable=False
+    db.item_venda.quantidade.writable=False
+    db.item_venda.preco_total.writable=False
+    db.item_venda.custo_total.readable=False
+    db.item_venda.preco_total.readable=False
+    db.item_venda.custo_total.writable=False
+    db.item_venda.custo_unitario.readable=True
+    db.item_venda.custo_unitario.writable=True
+    
+    form = SQLFORM(db.item_venda, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Projeto atualizado'
+        redirect(URL('lista_recebimento',args=item_venda.venda))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+@auth.requires_login()
+def lista_recebimento():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa = db.empresa(usuario.empresa)
+    venda=db.venda(request.args[0])
+    
+    rows = db((db.item_venda.venda==venda.id)).select()
+    total = db((db.item_venda.venda==venda.id)).count()
+    return locals()
 @auth.requires_login()
 def index():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
@@ -78,6 +115,7 @@ def lista_venda():
     empresa = db.empresa(usuario.empresa)
     venda = db.venda(request.args(0, cast=int))
     cliente = db.pessoa(db.pessoa.id==venda.cliente)
+    representante=db.usuario_empresa(venda.representante)
     #só para gerar produtos itens automatico
     from random import randrange, uniform
     #se colocar um calor maior que zero gera um monte de vendas
@@ -119,6 +157,18 @@ def lista_venda():
     registros = db(db.item_venda.venda==venda.id).select(
       limitby=limites,orderby=~db.item_venda.id
       )
+    preco_total=0
+    custo_total=0
+    for row in registros:
+        preco_total+=row.preco_unitario*row.quantidade
+        custo_total+=row.custo_unitario*row.quantidade
+    if (venda.preco_total!=preco_total)|(venda.custo_total!=custo_total):
+        venda.preco_total=preco_total
+        venda.custo_total=custo_total
+    comissao_geral=preco_total*representante.comissao
+    if comissao_geral>0:
+        venda.comissao_total=comissao_geral/100
+    venda.update_record()
     return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, venda=venda, cliente=cliente, usuario=usuario)
 
 @auth.requires_login()
@@ -254,6 +304,7 @@ def lista_status():
         redirect(URL('default','index'))
     empresa = db.empresa(usuario.empresa)
     venda = db.venda(request.args(0, cast=int))
+    representante = db.usuario_empresa(venda.representante)
     cliente = db.pessoa(db.pessoa.id==venda.cliente)
     #só para gerar produtos itens automatico
     from random import randrange, uniform
@@ -296,4 +347,16 @@ def lista_status():
     registros = db(db.item_venda.venda==venda.id).select(
       limitby=limites,orderby=~db.item_venda.id
       )
+    preco_total=0
+    custo_total=0
+    for row in registros:
+        preco_total+=row.preco_unitario*row.quantidade
+        custo_total+=row.custo_unitario*row.quantidade
+    if (venda.preco_total!=preco_total)|(venda.custo_total!=custo_total):
+        venda.preco_total=preco_total
+        venda.custo_total=custo_total
+    comissao_geral=preco_total*representante.comissao
+    if comissao_geral>0:
+        venda.comissao_total=comissao_geral/100
+    venda.update_record()
     return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, venda=venda, cliente=cliente, usuario=usuario)

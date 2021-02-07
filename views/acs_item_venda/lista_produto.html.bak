@@ -52,7 +52,7 @@
               <tbody>
                   {{for row in rows:}}
                 <tr>
-                  <th scope="row">{{=row.data_venda}}</th>
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_venda.day,row.data_venda.month,row.data_venda.year))}}</th>
                   <th scope="row">{{=row.representante.nome}}</th>
                   <th scope="row">{{=row.cliente.razaosocial_nome}}</th>
                   <th scope="row">{{=row.quantidade}}</th>

@@ -22,8 +22,29 @@ def lista_recebimento():
     return locals()
 
 @auth.requires_login()
+def lista_vendas_representante():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa = db.empresa(usuario.empresa)
+    mes=request.now.month
+    ano=request.now.year
+    if len(request.args) == 0:
+        redirect(URL(args=[mes,ano]))
+    mes=request.args(0, cast=int)
+    ano=request.args(1, cast=int)
+    primeira_data=datetime.date(ano, mes, 1)
+    ultima_data=datetime.date(ano, mes, 1)
+    if (mes==12):
+        ultima_data=datetime.date(ano+1, 1, 1)
+    else:
+        ultima_data=datetime.date(ano, mes+1, 1)
+    rows = db((db.venda.representante==usuario.id)&(db.venda.data_venda>=primeira_data)&(db.venda.data_venda<ultima_data)).select(orderby=db.venda.data_venda)
+    total = db((db.venda.representante==usuario.id)&(db.venda.data_venda>=primeira_data)&(db.venda.data_venda<ultima_data)).count()
+    return locals()
+@auth.requires_login()
 def index():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    if usuario.tipo=="Representante":
+        redirect(URL('acs_venda','lista_vendas_representante'))
     empresa = db.empresa(usuario.empresa)
     mes=request.now.month
     ano=request.now.year

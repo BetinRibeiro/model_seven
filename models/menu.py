@@ -17,7 +17,6 @@ if auth.user:
     response.menu += [
         (T('Empresa'), False, URL('acs_empresa', 'index'), []),
         (T('Clientes'), False, URL('acs_cliente', 'index')),
-        (T('Fornecedores'), False, URL('acs_fornecedor', 'index')),
         (T('Produtos'), False, URL('acs_produto', 'index')),
         (T('Vendas'), False, URL('acs_venda', 'index')),
     ]

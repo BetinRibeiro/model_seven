@@ -2,6 +2,8 @@
 @auth.requires_login()
 def index():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    if usuario.tipo=="Representante":
+        redirect(URL('lista_clientes',args=usuario.id))
     empresa = db.empresa(usuario.empresa)
     paginacao = 35
     if len(request.args) == 0:
@@ -91,7 +93,7 @@ def lista_representante():
     registros = db((db.pessoa.empresa==empresa.id)&(db.pessoa.representante==representante.id)).select(
       limitby=limites,orderby=~db.pessoa.id
       )
-    consul=(request.args(1))
+    consul=(request.args(2))
     if (consul):
         registros = db(((db.pessoa.empresa==empresa.id)&((db.pessoa.cpf.contains(consul))|(db.pessoa.razaosocial_nome.contains(consul))))&(db.pessoa.representante==representante.id)).select(limitby=(0,paginacao))
     return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, usuario=usuario, consul=consul, representante=representante)

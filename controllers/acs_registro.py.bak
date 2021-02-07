@@ -44,7 +44,7 @@ def alterar_registro_cliente():
     venda = db.venda(registro_cliente.venda)
     db.registro_cliente.id.writable=False
     db.registro_cliente.id.readable=False
-    db.registro_cliente.tipo.readable=True
+    db.registro_cliente.tipo.writable=True
     form = SQLFORM(db.registro_cliente, request.args(0, cast=int), deletable=True)
     if form.process().accepted:
         session.flash = 'Projeto atualizado'

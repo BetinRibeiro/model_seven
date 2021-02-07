@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
+import datetime
 @auth.requires_login()
 def index():
     usuario_empresa = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
-    empresa = db.empresa(usuario_empresa.empresa)
     if not usuario_empresa:
         redirect(URL('acs_empresa','cadastrar'))
-        qproj_abertos=db((db.projeto.empresa==usuario_empresa.empresa)&(db.projeto.ativo==True)).count()
-        if (qproj_abertos)>0:
-            aberto=True
+    empresa = db.empresa(usuario_empresa.empresa)
     return locals()
 
 @auth.requires_login()
@@ -32,3 +30,56 @@ def alterar():
     elif form.errors:
         response.flash = 'Erros no formulário!'
     return dict(form=form)
+
+
+@auth.requires_login()
+def relatorio_mes():
+    usuario_empresa = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa = db.empresa(usuario_empresa.empresa)
+    mes=request.now.month
+    ano=request.now.year
+    if len(request.args) < 2:
+        redirect(URL(args=[mes,ano]))
+    mes=request.args(0, cast=int)
+    ano=request.args(1, cast=int)
+    primeira_data=datetime.date(ano, mes, 1)
+    ultima_data=datetime.date(ano, mes, 1)
+    if (mes==12):
+        ultima_data=datetime.date(ano+1, 1, 1)
+    else:
+        ultima_data=datetime.date(ano, mes+1, 1)
+    rows = db((db.registro_empresa.empresa==empresa.id)&(db.registro_empresa.data_ocorrencia>=primeira_data)&(db.registro_empresa.data_ocorrencia<ultima_data)).select(orderby=db.registro_empresa.data_ocorrencia)
+    ##################
+    q_venda = db((db.item_venda.empresa==empresa.id)&(db.item_venda.data_venda>=primeira_data)&(db.item_venda.data_venda<ultima_data)&(db.item_venda.status!="Aberto")).count()
+    venda = 0
+    if q_venda>0:
+        sum = db.item_venda.preco_total.sum()
+        venda = db((db.item_venda.empresa==empresa.id)&(db.item_venda.data_venda>=primeira_data)&(db.item_venda.data_venda<ultima_data)&(db.item_venda.status!="Aberto")).select(sum).first()[sum]
+    ##################
+    q_venda_recebida = db((db.item_venda.empresa==empresa.id)&(db.item_venda.data_venda>=primeira_data)&(db.item_venda.data_venda<ultima_data)&(db.item_venda.status=="Entregue")).count()
+    recebido = 0
+    custo = 0
+    if q_venda_recebida>0:
+        sum = db.item_venda.preco_total.sum()
+        recebido = db((db.item_venda.empresa==empresa.id)&(db.item_venda.data_venda>=primeira_data)&(db.item_venda.data_venda<ultima_data)&(db.item_venda.status=="Entregue")).select(sum).first()[sum]
+        sum = db.item_venda.custo_total.sum()
+        custo = db((db.item_venda.empresa==empresa.id)&(db.item_venda.data_venda>=primeira_data)&(db.item_venda.data_venda<ultima_data)&(db.item_venda.status=="Entregue")).select(sum).first()[sum]
+    ##################
+    q_venda_efetiva = db((db.venda.empresa==empresa.id)&(db.venda.data_venda>=primeira_data)&(db.venda.data_venda<ultima_data)&(db.venda.status=="Entregue")&(db.venda.status!="Devolvido")).count()
+    comissao = 0
+    if q_venda_efetiva>0:
+        sum = db.venda.comissao_total.sum()+db.venda.preco_total.sum()
+        comissao = db((db.venda.empresa==empresa.id)&(db.venda.data_venda>=primeira_data)&(db.venda.data_venda<ultima_data)&(db.venda.status=="Entregue")&(db.venda.status!="Devolvido")).select(sum).first()[sum]
+        ##################
+    q_despesa = db((db.registro_empresa.empresa==empresa.id)&(db.registro_empresa.data_ocorrencia>=primeira_data)&(db.registro_empresa.data_ocorrencia<ultima_data)).count()
+    despesa = 0
+    if q_despesa>0:
+        sum = db.registro_empresa.valor.sum()
+        despesa = db((db.registro_empresa.empresa==empresa.id)&(db.registro_empresa.data_ocorrencia>=primeira_data)&(db.registro_empresa.data_ocorrencia<ultima_data)).select(sum).first()[sum]
+        ##################
+    q_cheques_voltados = db((db.registro_cliente.empresa==empresa.id)&(db.registro_cliente.data_ocorrencia>=primeira_data)&(db.registro_cliente.data_ocorrencia<ultima_data)&(db.registro_cliente.tipo=="Cheque Voltou")).count()
+    cheque_voltado = 0
+    if q_cheques_voltados>0:
+        sum = db.registro_cliente.valor.sum()
+        cheque_voltado = db((db.registro_cliente.empresa==empresa.id)&(db.registro_cliente.data_ocorrencia>=primeira_data)&(db.registro_cliente.data_ocorrencia<ultima_data)&(db.registro_cliente.tipo=="Cheque Voltou")).select(sum).first()[sum]
+    return locals()

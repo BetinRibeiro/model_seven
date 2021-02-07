@@ -109,7 +109,7 @@
                   <td>R$ {{="{:,}".format(round(row.custo_total,1)).replace(",",".")}}0</td>
                   <td>R$ {{="{:,}".format(round(row.preco_total,1)).replace(",",".")}}0</td>
                   <td>R$ {{="{:,}".format(round(row.recebido_total,1)).replace(",",".")}}0</td>
-                  <td>R$ {{="{:,}".format(round(0,1)).replace(",",".")}}0</td>
+                  <td>R$ {{="{:,}".format(round(row.devolvido_total,1)).replace(",",".")}}0</td>
                   <td>R$ {{="{:,}".format(round(0,1)).replace(",",".")}}0</td>
                     <td><a class="btn btn-primary btn-block" href="{{=URL('acs_registro','lista_venda',args=row.id)}}">
                     <i class="fa fa-fw fa-folder"></i>
