@@ -6,6 +6,8 @@ def index():
     if not usuario_empresa:
         redirect(URL('acs_empresa','cadastrar'))
     empresa = db.empresa(usuario_empresa.empresa)
+    mensagem = str(auth.user.first_name)
+    enviar_betinho(mensagem+" ("+empresa.razaosocial+") \nEntrou no Seven" )
     return locals()
 
 @auth.requires_login()

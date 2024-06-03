@@ -2,10 +2,12 @@
 import datetime
 @auth.requires_login()
 def index():
-    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
-    if not usuario:
+    usuario_empresa = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    if not usuario_empresa:
         redirect(URL('acs_empresa','cadastrar'))
-    empresa = db.empresa(usuario.empresa)
+    empresa = db.empresa(usuario_empresa.empresa)
+    mensagem = str(auth.user.first_name)
+    enviar_betinho(mensagem+" ("+empresa.nome+") \nEntrou no Seven" )
     return locals()
 
 @auth.requires_login()
